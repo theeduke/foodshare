@@ -65,29 +65,3 @@ class manageTemplateView(ListView):
         
         messages.add_message(request, messages.SUCCESS, f"You accepted the donation of {contact.donor_name}")
         return HttpResponseRedirect(request.path)
-        
-        
-
-
-    
-class Donation(View):
-    def get(self, request, *args, **kwargs):
-        # get every item from each category
-        contact = Donations.objects.filter(
-            category__name__contains='Donations')
-        Food = Donation.objects.filter(category__name__contains='Food')
-        Footware= Donation.objects.filter(category__name__contains='Footware')
-        Clothes = Donation.objects.filter(category__name__contains='Clothes')
-        Fund= Donation.objects.filter(category__name__contains='Fund')
-        
-        context = {
-            'Donations': Donation,
-           
-            
-            
-            'Food': Food,
-            'Footware' : Footware,
-            'Clothes' : Clothes,
-            'Fund': Fund,
-        }
-        return render(request, 'charity/index.html/Donations', context)
