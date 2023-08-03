@@ -13,5 +13,5 @@ class UserRegisterForm(UserCreationForm):
 class Form(forms.ModelForm):
   class Meta:
     model = Donations
-    fields = ["donor_name", "donor_mobile", 'donor_email',  'Donation_type', 'quantity' ]
-    labels = {'donor_name': "Name", "donor_mobile": "Mobile Number", 'donor_email': 'donor_email', 'type':'Donation_type', 'quantity': 'quantity'}        
+    fields = ["fullname", "mobile_number", 'donor_email',  'Donation_type', 'quantity' ]
+    labels = {'fullname': "Name", "mobile_number": "Mobile Number", 'email': 'donor_email', 'type':'Donation_type', 'quantity': 'quantity'}        
