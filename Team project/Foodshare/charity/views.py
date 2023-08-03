@@ -1,10 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views import View
 from django.contrib import messages
-from django.http import HttpResponse
 from django.http import HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from charity.models import Donations
+from django.contrib.auth.decorators import login_required
+from .forms import UserRegisterForm
+from .forms import  Form
 from django.views.generic import ListView
 import datetime
 # Create your views here.
@@ -28,7 +30,7 @@ class contactTemplateView(TemplateView):
                 donor_name = fname,
                 donor_mobile = mobile,
                 Donation_type = category,
-                donor_address = email,
+                donor_email = email,
                 request = message,
             )
         
@@ -36,7 +38,32 @@ class contactTemplateView(TemplateView):
         
             messages.add_message(request, messages.SUCCESS, f"Thank you {fname} for making a donation.")
             return  render(request, 'charity/contact.html')
+def register(request):
+    if request.method == "POST":
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Hi {username}, your account was created successfully')
+            return redirect('home')
+    else:
+        form = UserRegisterForm()
 
+    return render(request, 'charity/register.html', {'form': form})
+
+
+@login_required()
+def profile(request):
+    return render(request, 'charity/profile.html')
+
+def Form(request):
+  if request.method == "POST":
+    form = Form(request.POST)
+    if form.is_valid():
+      form.save()
+    else:
+      form = form()
+  return render(request, 'Charity/Form', {'form': form})
 
 class manageTemplateView(ListView):
     template_name = "charity/manage-donation.html"
@@ -56,7 +83,6 @@ class manageTemplateView(ListView):
         return context
     
     def post(self, request):
-        #date = request.POST.get("date")
         donation_id = request.POST.get("donation-id")
         contact = Donations.objects.get(id=donation_id)
         contact.accepted=True
